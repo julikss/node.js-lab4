@@ -1,0 +1,27 @@
+<script>
+
+  const deleteElement = async (name, el) => {
+    let loaded = false;
+
+    fetch(`/entity/delete/${name}/${el}`, {
+      method: "DELETE",
+      headers: {
+      'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  const addElement = async (name) => {
+    let value = prompt("Enter value");
+    let loaded = false;
+
+    fetch(`/entity/add/${name}`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({value})
+    }).then(res => document.location.reload());
+  }
+
+</script>
