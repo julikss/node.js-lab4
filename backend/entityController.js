@@ -5,6 +5,31 @@ const Keyword = require('./entities/keywordEntity');
 const handlerNames = ["authors", "bookNames", "keywords"];
 const classes = [Author, BookName, Keyword];
 
+const getAllObjects = (req, res) => {
+  try {
+    const { name } = req.params;
+    const objArray = require(`./storage/${name}.json`);
+
+    res.json(objArray);
+  } catch (error) {
+    console.log(error);
+    res.status(403).json({ message: 'Not found' });
+  }
+};
+
+const getObject= (req, res) => {
+  try {
+    const { name, id } = req.params;
+    const objArray = require(`./storage/${name}.json`);
+    const reqObj = objArray.find(el => el.id == id);
+
+    res.json(reqObj);
+  } catch (error) {
+    console.log(error);
+    res.status(403).json({ message: 'Not found' });
+  }
+};
+
 const deleteObject = (req, res) => {
   try {
     const { name, id } = req.params;
@@ -16,7 +41,7 @@ const deleteObject = (req, res) => {
       if (err) throw err;
     });
 
-    res.json("Successful request")
+    res.json("Successful request");
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: 'Error found' });
@@ -41,7 +66,31 @@ const addObject = (req, res) => {
       if (err) throw err;
     });
 
-    res.json('Successful request');
+    res.status(201).json("Created");
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: 'Error found' });
+  }
+};
+
+const updateObject = (req, res) => {
+  try {
+    const { name, id } = req.params;
+    const { value } = req.body;
+    const objArray = require(`./storage/${name}.json`);
+
+    for(let i = 0; i < objArray.length; i++) {
+      if(objArray[i].id == id) {
+        objArray[i].value = value;
+      }
+    }
+
+    fs.writeFileSync(`./storage/${name}.json`, JSON.stringify(objArray), (err) => {
+      if (err) throw err;
+    });
+    
+    res.json("Object value was updated");
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: 'Error found' });
@@ -49,6 +98,9 @@ const addObject = (req, res) => {
 };
 
 module.exports = {
+  getAllObjects,
+  getObject,
   deleteObject,
-  addObject
+  addObject,
+  updateObject
 };

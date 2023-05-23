@@ -35,7 +35,7 @@ app.get('/keywords', (req, res) => {
 })
 
 app.use(express.json());
-app.use('/entity', entityRouter);
+app.use('/', entityRouter);
 app.use('/books', booksRouter);
 
 app.listen(port, () => {
