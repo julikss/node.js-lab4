@@ -1,3 +1,4 @@
+const { error } = require('console');
 const fs = require('fs');
 const Author = require('./entities/authorEntity');
 const BookName = require('./entities/bookNameEntity');
@@ -8,12 +9,17 @@ const classes = [Author, BookName, Keyword];
 const getAllObjects = (req, res) => {
   try {
     const { name } = req.params;
+    const { param } = req.query;
     const objArray = require(`./storage/${name}.json`);
 
-    res.json(objArray);
+    if(param) {
+      let filteredObjArray = objArray.filter(el => el.value == param);
+      res.status(200).json(filteredObjArray);
+    } else {
+      res.status(200).json(objArray);
+    }
   } catch (error) {
-    console.log(error);
-    res.status(403).json({ message: 'Not found' });
+    res.status(404).json({ message: 'Not found' });
   }
 };
 
@@ -23,10 +29,9 @@ const getObject= (req, res) => {
     const objArray = require(`./storage/${name}.json`);
     const reqObj = objArray.find(el => el.id == id);
 
-    res.json(reqObj);
+    res.status(200).json(reqObj);
   } catch (error) {
-    console.log(error);
-    res.status(403).json({ message: 'Not found' });
+    res.status(404).json({ message: 'Not found' });
   }
 };
 
@@ -41,10 +46,9 @@ const deleteObject = (req, res) => {
       if (err) throw err;
     });
 
-    res.json("Successful request");
+    res.status(200).json("Deleted");
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: 'Error found' });
+    res.status(404).json({ message: 'Not found' });
   }
 };
 
@@ -55,22 +59,23 @@ const addObject = (req, res) => {
     const objArray = require(`./storage/${name}.json`);
     let newObject = {};
 
-    for(let i = 0; i < classes.length; i++) {
-      if(handlerNames[i] == name) {
-        newObject = new classes[i](objArray.length > 0 ? objArray[objArray.length - 1].id + 1 : 0, value);
-        break;
+    if(value) {
+      for(let i = 0; i < classes.length; i++) {
+        if(handlerNames[i] == name) {
+          newObject = new classes[i](objArray.length > 0 ? objArray[objArray.length - 1].id + 1 : 0, value);
+          break;
+        }
       }
-    }
-    objArray.push(newObject);
-    fs.writeFileSync(`./storage/${name}.json`, JSON.stringify(objArray), (err) => {
-      if (err) throw err;
-    });
-
-    res.status(201).json("Created");
-
+      objArray.push(newObject);
+      fs.writeFileSync(`./storage/${name}.json`, JSON.stringify(objArray), (err) => {
+        if (err) throw err;
+      });
+  
+      res.status(201).json("Created");
+    } else throw error
+    
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: 'Error found' });
+    res.status(404).json({ message: 'Not found' });
   }
 };
 
@@ -90,10 +95,9 @@ const updateObject = (req, res) => {
       if (err) throw err;
     });
     
-    res.json("Object value was updated");
+    res.status(200).json("Updated");
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: 'Error found' });
+    res.status(404).json({ message: 'Not found' });
   }
 };
 
