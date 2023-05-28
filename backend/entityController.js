@@ -9,12 +9,18 @@ const classes = [Author, BookName, Keyword];
 const getAllObjects = (req, res) => {
   try {
     const { name } = req.params;
-    const { param } = req.query;
+    const parameters = req.query;
     const objArray = require(`./storage/${name}.json`);
 
-    if(param) {
-      let filteredObjArray = objArray.filter(el => el.value == param);
+    if(Object.keys(req.query).length == 1) {
+      let filteredObjArray = objArray.filter(el => el.value == parameters.param);
       res.status(200).json(filteredObjArray);
+    } else if (Object.keys(req.query).length == 2) {
+      let start = ((parameters.page - 1) * parameters.items_per_page);
+      let end = start + Number(parameters.items_per_page);
+      let paginatedObjects = objArray.slice(start, end);
+      console.log(end)
+      res.status(200).json(paginatedObjects);
     } else {
       res.status(200).json(objArray);
     }
