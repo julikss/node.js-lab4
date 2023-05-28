@@ -1,0 +1,12 @@
+<div style="text-align: center">
+  <h1>Page of the entity</h1>
+</div>
+<div class="obj-block">
+  <% for (var i = 0; i < entityArray.length; i++) { %>
+    <div class="obj">
+      <span><%= entityArray[i].value %></span>
+      <button onclick='deleteElement("<%= entityName %>","<%= entityArray[i].id %>")' class="btn">Delete object</button>
+    </div>
+  <% } %>
+  <button style="margin-top: 20px;" onclick='addElement("<%= entityName %>")' class="btn">Add object</button>
+</div>
