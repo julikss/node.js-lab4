@@ -1,0 +1,139 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0", 
+      "title": "Book Catalog",
+      "description": "Book Catalog Application API",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:8000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Books",
+        "description": "API for books in the system"
+      }
+    ],
+    "schemes": ["http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "paths": {
+       "/bookNames": {
+            "get": {
+                "tags": ["Books"],
+                "summary": "Get all books in system",
+                "responses": {
+                    "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/definitions/Books"
+                    }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Books"],
+                    "description": "Add a new book in system",
+                    "parameters": [{
+                        "name": "book",
+                        "in": "body",
+                        "description": "A book that we want to add",
+                        "schema": {
+                            "$ref": "#/definitions/Book"
+                        }
+                    }],
+                    "produces": ["application/json"],
+                    "responses": {
+                        "200": {
+                            "description": "New book is added",
+                            "schema": {
+                                "$ref": "#/definitions/Book"
+                            }
+                        }
+                    }
+            } 
+       },
+       "/bookNames/{id}": {
+            "parameters": [{
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "ID of a book that we want to find",
+                "type": "integer"
+            }],
+            "delete": {
+                "summary": "Delete a book with given ID",
+                "tags": ["Books"],
+                "responses": {
+                    "200": {
+                        "description": "A book is deleted",
+                        "schema": {
+                            "$ref": "#/definitions/Book"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a book with given ID",
+                "tags": ["Books"],
+                "parameters": [{
+                    "name": "book",
+                    "in": "body",
+                    "description": "User with new values of properties",
+                    "schema": {
+                        "$ref": "#/definitions/updateBook"
+                    }
+                }],
+                "responses": {
+                  "200": {
+                    "description": "A book is updated",
+                    "schema": {
+                      "$ref": "#/definitions/Book"
+                    }
+                  }
+                }
+            },
+            "get": {
+                "tags": ["Books"],
+                "summary": "Get one book in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Book"
+                        }
+                    }
+                }
+            }
+       }
+    },
+      "definitions": {
+        "Book": {
+          "required": ["id", "value"],
+          "properties": {
+            "_id": {
+              "type": "integer",
+              "uniqueItems": true
+            },
+            "value": {
+              "type": "string"
+            }
+          }
+        },
+        "Books": {
+          "type": "array",
+          "$ref": "#/definitions/Books"
+        },
+        "updateBook": {
+            "required": ["id", "value"],
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            }
+        }
+      }
+  }

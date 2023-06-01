@@ -38,6 +38,11 @@ app.use(express.json());
 app.use('/', entityRouter);
 app.use('/books', booksRouter);
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)
 })
