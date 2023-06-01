@@ -84,7 +84,8 @@ GET /students/{student_id}/subjects?year=2023
 - 401 Unauthorized: Клієнт не має дозволу на доступ до запитуваного ресурсу.
 - 404 Not Found: Запитуваний ресурс не знайдений на сервері.
 
-**_8. Опишіть яку роль відіграють статуси HTTP(2XX, 3XX, 4XX) в REST API._**
+**_8. Опишіть підхід HATEOAS._**
+<br/>
 **HATEOAS** (Hypermedia as the Engine of Application State) - це архітектурний принцип, що використовується в дизайні RESTful API. За допомогою HATEOAS, клієнт може ефективно взаємодіяти з RESTful API, без необхідності заздалегідь знати URL-адреси або структуру API.
 
 *Основні принципи HATEOAS:*
